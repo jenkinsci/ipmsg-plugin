@@ -28,10 +28,6 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Toyokazu Ohara
  */
 public class IPMsgPublisher extends Publisher {
-    IPMsgPublisher() {
-    	System.out.println("hello");
-    	System.out.println("hello");
-    }
     private static final int DEFAULT_PORT          = 2425;
 	private static final int DEFAULT_LOG_LINE_SIZE = 100;
     private static final int MINMUM_PORT_NUMBER    = 0;
