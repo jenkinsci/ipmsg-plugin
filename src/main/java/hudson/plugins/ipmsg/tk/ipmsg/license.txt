@@ -1,0 +1,2 @@
+this package classes are under CPL(Common Public License)
+see http://amateras.sourceforge.jp/cgi-bin/fswiki/wiki.cgi?page=IPMessenger

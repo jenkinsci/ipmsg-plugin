@@ -1,0 +1,19 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="${%IPMessenger Notification}">
+    <f:entry title="${%Port of IPMessenger}">
+      <f:textbox name="ipmsg_port" value="${instance.port}"/>
+    </f:entry>
+    <f:entry title="${%username of IPMessenger}">
+      <f:textbox name="ipmsg_userName" value="${instance.userName}"/>
+    </f:entry>
+    <f:entry title="${%nickName of IPMessenger}">
+      <f:textbox name="ipmsg_nickName" value="${instance.nickName}"/>
+    </f:entry>
+    <f:entry title="${%group name of IPMessenger}">
+      <f:textbox name="ipmsg_group" value="${instance.group}" />
+    </f:entry>
+    <f:entry title="${%line size of log message}">
+      <f:textbox name="ipmsg_logLineSize" value="${instance.logLineSize}"/>
+    </f:entry>
+  </f:section>
+</j:jelly>
