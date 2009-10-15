@@ -18,14 +18,14 @@ import hudson.plugins.ipmsg.tk.ipmsg.IPMessenger;
 public class Messenger extends IPMessenger {
     private List<String> hostNames = new ArrayList<String>();
     public Messenger() throws IOException {
-        this.userName    = IPMsgPublisher.descriptor().getUserName();
-        this.nickName    = IPMsgPublisher.descriptor().getNickName();
-        this.group       = IPMsgPublisher.descriptor().getGroup();
+        this.userName    = IPMsgPublisher.DESCRIPTOR.getUserName();
+        this.nickName    = IPMsgPublisher.DESCRIPTOR.getNickName();
+        this.group       = IPMsgPublisher.DESCRIPTOR.getGroup();
         this.hostName    = InetAddress.getLocalHost().getHostName();
         this.absenceMode = false;
         this.absenceMsg  = "";
-        this.socket      = new DatagramSocket(IPMsgPublisher.descriptor().getPort());
-        this.in_port     = IPMsgPublisher.descriptor().getPort();
+        this.socket      = new DatagramSocket(IPMsgPublisher.DESCRIPTOR.getPort());
+        this.in_port     = IPMsgPublisher.DESCRIPTOR.getPort();
         this.debug       = false;
     }
     

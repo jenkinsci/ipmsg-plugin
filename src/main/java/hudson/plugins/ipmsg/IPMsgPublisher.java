@@ -1,33 +1,32 @@
 package hudson.plugins.ipmsg;
 
+import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.model.Descriptor;
-import hudson.model.Hudson;
 import hudson.model.Result;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
-import hudson.util.FormFieldValidator;
-//import hudson.util.FormValidation;
+import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Publisher class for IPMessenger.
  *
  * @author Toyokazu Ohara
  */
-public class IPMsgPublisher extends Publisher {
+public class IPMsgPublisher extends Notifier {
     private static final int DEFAULT_PORT          = 2425;
 	private static final int DEFAULT_LOG_LINE_SIZE = 100;
     private static final int MINMUM_PORT_NUMBER    = 0;
@@ -37,7 +36,7 @@ public class IPMsgPublisher extends Publisher {
 	@Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         if (build.getResult() == Result.FAILURE) {
-        	List lines = build.getLog(descriptor().getLogLineSize());
+        	List lines = build.getLog(DESCRIPTOR.getLogLineSize());
         	StringBuilder sb = new StringBuilder();
         	sb.append("fail to build.\n");
         	sb.append("please make sure.\n");
@@ -51,17 +50,14 @@ public class IPMsgPublisher extends Publisher {
         return true;
     }
 
-    public Descriptor<Publisher> getDescriptor() {
-        return DESCRIPTOR;
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.STEP;
     }
 
+    @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
-    public static DescriptorImpl descriptor() {
-        return (DescriptorImpl) Hudson.getInstance().getPublisher(IPMsgPublisher.class.getSimpleName());
-    }
-
-    public static final class DescriptorImpl extends Descriptor<Publisher> {
+    public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
     	private int    port;
         private String userName;
         private String nickName;
@@ -114,10 +110,16 @@ public class IPMsgPublisher extends Publisher {
         }
 
         @Override
+        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+            return true;
+        }
+
+        @Override
         public IPMsgPublisher newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             return new IPMsgPublisher();
         }
         
+        @Override
         public boolean configure( StaplerRequest req, JSONObject json ) throws FormException {
     		MsgClient.logout();
 
@@ -131,29 +133,17 @@ public class IPMsgPublisher extends Publisher {
     		save();
     		return true;
         }
-        public void doPortCheck(StaplerRequest req, StaplerResponse rsp,
-                @QueryParameter final String value) throws IOException, ServletException {
-        		new FormFieldValidator(req,rsp,false) {
-        			protected void check() throws IOException, ServletException {
-        				if (isValidPort(value)) {
-    						ok();
-        				} else {
-        					error("please set valid port number. instead of" + value);
-        				}
-        			}
-        		}.process();
+
+        /**
+         * Checks the Port in <tt>global.jelly</tt>
+         */
+        public FormValidation doPortCheck(@QueryParameter final String value) {
+                if (isValidPort(value)) {
+                        return FormValidation.ok();
+                } else {
+                        return FormValidation.error("please set valid port number. instead of" + value);
+                }
         }
-        // for new form validation
-//        /**
-//         * Checks the Port in <tt>global.jelly</tt>
-//         */
-//        public FormValidation doCheckUrl(@QueryParameter String value) {
-//        	if (isValidPort(value)) {
-//				return FormValidation.ok();
-//        	} else {
-//        		FormValidation.error("please set valid port number. instead of" + value);
-//        	}
-//        }
         
         private String nullify(String v) {
             if(v!=null && v.length()==0)    v=null;

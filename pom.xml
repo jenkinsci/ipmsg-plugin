@@ -3,10 +3,10 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.318</version>
+    <version>1.319</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
   <artifactId>ipmsg</artifactId>
   <packaging>hpi</packaging>
   <version>0.1-SNAPSHOT</version>
